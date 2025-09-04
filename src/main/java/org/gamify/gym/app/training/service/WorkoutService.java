@@ -1,8 +1,5 @@
 package org.gamify.gym.app.training.service;
 
-import org.gamify.gym.app.training.dto.WorkoutDto;
-import org.gamify.gym.app.training.dto.ExerciseDto;
-import org.gamify.gym.app.training.dto.ExerciseLogDto;
 import org.gamify.gym.app.training.model.Workout;
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.repository.WorkoutRepository;

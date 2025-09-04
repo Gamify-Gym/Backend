@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "jwt.public.key",
+      "type": "java.lang.String",
+      "description": "Chave pública que deve estar junto do application.properties"
+    },
+    {
+      "name": "jwt.private.key",
+      "type": "java.lang.String",
+      "description": "Chave pública que deve estar junto do application.properties"
+    }
+  ]
+}

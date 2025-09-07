@@ -40,7 +40,7 @@ public class StreakService {
         Player player = playerRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "No player with email: " + email));
-        Optional<Workout> workout = workoutRepository.findWorkoutByName(workoutName.orElse(null));
+        Optional<Workout> workout = workoutRepository.findWorkoutByNameAndPlayerEmail(workoutName.orElse(null), email);
         PlayerActivity playerActivity = new PlayerActivity();
         playerActivity.setPlayer(player);
         playerActivity.setActiveDate(LocalDate.now());

@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkoutRepository extends JpaRepository<Workout, Long> {
     @Query("SELECT w FROM Workout w JOIN FETCH w.exercises WHERE w.player = :player")
-    List<Workout> findByPlayerWithExercises(@Param("player") Player player);
+    Optional<List<Workout>> findByPlayerWithExercises(@Param("player") Player player);
 
-    Optional<Workout> findWorkoutByName(String name);
+    @Query("SELECT w FROM Workout w WHERE w.name = :name AND w.player.user.email = :email")
+    Optional<Workout> findWorkoutByNameAndPlayerEmail(@Param("name") String name, @Param("email") String email);
 }

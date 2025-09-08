@@ -20,8 +20,8 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name_exercise")
-    private String name_exercise;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column
     private String muscles;
@@ -34,11 +34,11 @@ public class Exercise {
 
     @ManyToOne
     @JoinColumn(name = "workout_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference("workout")
     private Workout workout;
 
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonBackReference("exerciseLogs")
     private List<ExerciseLog> exerciseLogs;
 
     public Long getId() {
@@ -47,14 +47,6 @@ public class Exercise {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName_exercise() {
-        return name_exercise;
-    }
-
-    public void setName_exercise(String name_exercise) {
-        this.name_exercise = name_exercise;
     }
 
     public String getMuscles() {
@@ -95,5 +87,13 @@ public class Exercise {
 
     public void setExerciseLogs(List<ExerciseLog> exerciseLogs) {
         this.exerciseLogs = exerciseLogs;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -5,7 +5,15 @@ public class CreateExerciseDto {
     private String muscles;
     private Integer repeticoes;
     private Integer series;
-    private Long workoutId;
+    private String workout_name;
+
+    public String getWorkout_name() {
+        return workout_name;
+    }
+
+    public void setWorkout_name(String workout_name) {
+        this.workout_name = workout_name;
+    }
 
     public String getNameExercise() {
         return nameExercise;
@@ -39,11 +47,4 @@ public class CreateExerciseDto {
         this.series = series;
     }
 
-    public Long getWorkoutId() {
-        return workoutId;
-    }
-
-    public void setWorkoutId(Long workoutId) {
-        this.workoutId = workoutId;
-    }
 }

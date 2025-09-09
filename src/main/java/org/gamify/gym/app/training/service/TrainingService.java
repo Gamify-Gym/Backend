@@ -33,14 +33,16 @@ public class TrainingService {
         @Transactional
         public Exercise insertExercise(String email, String nameExercise, String muscles, Integer repeticoes,
                         Integer series, String workoutName) {
+                Workout workout = workoutRepository.findWorkoutByNameAndPlayerEmail(workoutName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "No workout found with name: " + workoutName + " for this player"));
+
                 Exercise exercise = new Exercise();
                 exercise.setName(nameExercise);
                 exercise.setMuscles(muscles);
                 exercise.setRepeticoes(repeticoes);
                 exercise.setSeries(series);
-                exercise.setWorkout(workoutRepository.findWorkoutByNameAndPlayerEmail(workoutName, email)
-                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                                "No workout found with name: " + workoutName + " for this player")));
+                exercise.setWorkout(workout);
 
                 return exerciseRepository.save(exercise);
         }
@@ -60,6 +62,62 @@ public class TrainingService {
                                                 "No player with provided email")));
                 return workoutRepository.save(workout);
 
+        }
+
+        @Transactional
+        public void deleteExercise(String email, String exerciseName) {
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "No exercise with provided name"));
+                if (!exercise.getWorkout().getPlayer().getUser().getEmail().equals(email)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }
+                exerciseRepository.delete(exercise);
+        }
+
+        @Transactional
+        public void deleteWorkout(String email, String workoutName) {
+                Workout workout = workoutRepository.findWorkoutByNameAndPlayerEmail(workoutName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "No workout with provided name"));
+                if (!workout.getPlayer().getUser().getEmail().equals(email)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+
+                }
+                workoutRepository.delete(workout);
+        }
+
+        @Transactional
+        public Workout alterWorkout(String email, String oldWorkoutName, String name, String description) {
+                Workout workout = workoutRepository.findWorkoutByNameAndPlayerEmail(oldWorkoutName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "No workout with provided name"));
+
+                if (!workout.getPlayer().getUser().getEmail().equals(email)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }
+                workout.setDescription(description);
+                workout.setName(name);
+                return workoutRepository.save(workout);
+
+        }
+
+        @Transactional
+        public Exercise alterExercise(String email, String oldExerciseName, String nameExercise, String muscles,
+                        Integer repeticoes,
+                        Integer series) {
+
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(oldExerciseName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "No workout with provided name"));
+                if (!exercise.getWorkout().getPlayer().getUser().getEmail().equals(email)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }
+                exercise.setName(nameExercise);
+                exercise.setMuscles(muscles);
+                exercise.setRepeticoes(repeticoes);
+                exercise.setSeries(series);
+                return exerciseRepository.save(exercise);
         }
 
 }

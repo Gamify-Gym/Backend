@@ -44,6 +44,10 @@ public class TrainingService {
                 exercise.setSeries(series);
                 exercise.setWorkout(workout);
 
+                if (!exercise.getWorkout().getPlayer().getUser().getEmail().equals(email)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }
+
                 return exerciseRepository.save(exercise);
         }
 

@@ -14,5 +14,6 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
     @Query("SELECT e FROM Exercise e JOIN FETCH e.exerciseLogs WHERE e.id IN :exerciseIds")
     List<Exercise> findByIdsWithLogs(@Param("exerciseIds") List<Long> exerciseIds);
 
-    Optional<Exercise> findExerciseByName(String name);
+    @Query("SELECT e FROM Exercise e where e.name = :name AND e.player.user.email = :email")
+    Optional<Exercise> findExerciseByNameAndEmail(@Param("name") String name, @Param("email") String email);
 }

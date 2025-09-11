@@ -1,1 +1,7 @@
-# Gamify-Gym-Backend
+# Gamify Gym Backend
+***
+
+- [**Intallation**]()
+
+## Installation
+*** 

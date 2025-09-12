@@ -6,6 +6,7 @@ import org.gamify.gym.app.training.dto.AlterExerciseDto;
 import org.gamify.gym.app.training.dto.AlterWorkoutDto;
 import org.gamify.gym.app.training.dto.CreateExerciseDto;
 import org.gamify.gym.app.training.dto.CreateWorkoutDto;
+import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.model.Workout;
 import org.gamify.gym.app.training.repository.ExerciseRepository;
@@ -121,7 +122,7 @@ public class TrainingController {
         try {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
-            List<Workout> workouts = trainingService.getWorkout(email);
+            List<WorkoutResponseDto> workouts = trainingService.getWorkout(email);
             return ResponseEntity.ok(workouts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

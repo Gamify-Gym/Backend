@@ -1,7 +1,9 @@
 package org.gamify.gym.app.training.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.model.Workout;
 import org.gamify.gym.app.training.repository.ExerciseRepository;
@@ -126,13 +128,24 @@ public class TrainingService {
                 return exerciseRepository.save(exercise);
         }
 
-        public List<Workout> getWorkout(String email) {
+        public List<WorkoutResponseDto> getWorkout(String email) {
                 List<Workout> workout = workoutRepository.findAllWorkouts(email);
                 if (workout.isEmpty()) {
-                        new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                                         "No workouts for user");
                 }
-                return workout;
+
+                List<WorkoutResponseDto> dtos = new ArrayList<>();
+                for (Workout w : workout) {
+                        int totalExercises = w.getExercises().size();
+                        int totalSeries = w.getExercises().stream()
+                                        .mapToInt(Exercise::getSeries)
+                                        .sum();
+                        dtos.add(new WorkoutResponseDto(w.getName(), w.getDescription(), w.getExercises(),
+                                        totalExercises,
+                                        totalSeries));
+                }
+                return dtos;
         }
 
 }

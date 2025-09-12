@@ -16,4 +16,7 @@ public interface WorkoutRepository extends JpaRepository<Workout, Long> {
 
     @Query("SELECT w FROM Workout w WHERE w.name = :name AND w.player.user.email = :email")
     Optional<Workout> findWorkoutByNameAndPlayerEmail(@Param("name") String name, @Param("email") String email);
+
+    @Query("SELECT w FROM Workout w WHERE w.player.user.email = :email")
+    List<Workout> findAllWorkouts(@Param("email") String email);
 }

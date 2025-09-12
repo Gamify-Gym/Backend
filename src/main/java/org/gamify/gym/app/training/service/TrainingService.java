@@ -1,5 +1,7 @@
 package org.gamify.gym.app.training.service;
 
+import java.util.List;
+
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.model.Workout;
 import org.gamify.gym.app.training.repository.ExerciseRepository;
@@ -122,6 +124,15 @@ public class TrainingService {
                 exercise.setRepeticoes(repeticoes);
                 exercise.setSeries(series);
                 return exerciseRepository.save(exercise);
+        }
+
+        public List<Workout> getWorkout(String email) {
+                List<Workout> workout = workoutRepository.findAllWorkouts(email);
+                if (workout.isEmpty()) {
+                        new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "No workouts for user");
+                }
+                return workout;
         }
 
 }

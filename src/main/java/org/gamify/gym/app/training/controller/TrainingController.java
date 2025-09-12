@@ -1,5 +1,7 @@
 package org.gamify.gym.app.training.controller;
 
+import java.util.List;
+
 import org.gamify.gym.app.training.dto.AlterExerciseDto;
 import org.gamify.gym.app.training.dto.AlterWorkoutDto;
 import org.gamify.gym.app.training.dto.CreateExerciseDto;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController()
 @RequestMapping(value = "/training")
@@ -112,4 +115,18 @@ public class TrainingController {
                     .body("Error: " + e.getMessage());
         }
     }
+
+    @GetMapping(value = "/workout")
+    public ResponseEntity<?> getWorkouts(Authentication authentication) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            List<Workout> workouts = trainingService.getWorkout(email);
+            return ResponseEntity.ok(workouts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
 }

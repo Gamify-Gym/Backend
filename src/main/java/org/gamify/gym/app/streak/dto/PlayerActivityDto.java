@@ -34,9 +34,6 @@ public class PlayerActivityDto {
         this.status = status;
     }
 
-    public PlayerActivityDto() {
-    }
-
     public PlayerActivityDto(Optional<String> workoutName, LocalDate today, Status status) {
         this.workoutName = workoutName;
         this.today = today;

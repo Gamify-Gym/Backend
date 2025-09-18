@@ -1,7 +1,9 @@
 package org.gamify.gym.app.streak.service;
 
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.gamify.gym.app.streak.model.PlayerActivity;
@@ -36,16 +38,63 @@ public class StreakService {
 
     @Transactional
     public PlayerActivity insertDailyActivity(String email, Status status,
-            Optional<String> workoutName) {
+            Optional<String> workoutName, Optional<LocalDate> date) {
         Player player = playerRepository.findByUserEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "No player with email: " + email));
         Optional<Workout> workout = workoutRepository.findWorkoutByNameAndPlayerEmail(workoutName.orElse(null), email);
+
+        LocalDate today = date.orElse(LocalDate.now());
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int currentWeekOfYear = today.get(weekFields.weekOfYear());
+
+        
+        if (player.getLastWeekOfYear() != 0 && player.getLastWeekOfYear() != currentWeekOfYear) {
+           
+            if (player.getCurrentWeekTrainedDays() >= player.getWeeklyTargetDays()) {
+              
+                player.setWeeklyStreak(player.getWeeklyStreak() + 1);
+            } else {
+         
+                player.setWeeklyStreak(0);
+            }
+
+            player.setCurrentWeekTrainedDays(0);
+            player.setLastWeekOfYear(currentWeekOfYear);
+        } else if (player.getLastWeekOfYear() == 0) {
+          
+            player.setLastWeekOfYear(currentWeekOfYear);
+        }
+
+    
+        if (status == Status.OK) {
+            player.setCurrentWeekTrainedDays(player.getCurrentWeekTrainedDays() + 1);
+        }
+
+      
+        playerRepository.save(player);
+
         PlayerActivity playerActivity = new PlayerActivity();
         playerActivity.setPlayer(player);
-        playerActivity.setActiveDate(LocalDate.now());
+        playerActivity.setActiveDate(today);
         playerActivity.setStatus(status);
         playerActivity.setWorkout(workout.orElse(null));
         return playerActivityRepository.save(playerActivity);
+    }
+
+    @Transactional
+    public Player setWeeklyTargetDays(String email, int targetDays) {
+        Player player = playerRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "No player with email: " + email));
+        player.setWeeklyTargetDays(targetDays);
+        return playerRepository.save(player);
+    }
+
+    @Transactional
+    public Player getPlayerStreakInfo(String email) {
+        return playerRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "No player with email: " + email));
     }
 }

@@ -24,7 +24,7 @@ import jakarta.persistence.Table;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_player;
+    private Long id_player;
 
     @Column
     private Double height;
@@ -143,4 +143,17 @@ public class Player {
     public void setCurrentWeekTrainedDays(Integer currentWeekTrainedDays) {
         this.currentWeekTrainedDays = currentWeekTrainedDays;
     }
+
+    public List<PlayerActivity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<PlayerActivity> activities) {
+        this.activities = activities;
+    }
+
+    public Long getId_player() {
+        return id_player;
+    }
+
 }

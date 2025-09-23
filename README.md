@@ -50,6 +50,7 @@ docker compose down
 ```
 
 ## <img src="https://devicon-website.vercel.app/api/git/original.svg" alt="Git" width="28" style="vertical-align:middle;"/> Contribuindo para o projeto
+***
 Logue na sua conta do github na web. 
 Depois logue localmente no github: 
 ```bash
@@ -71,4 +72,48 @@ git commit -m "Sua mensagem"
 Leve o commit para o repositório remoto:
 ```bash
 git push origin
+```
+
+## Requisições
+***
+
+### Amizade
+- POST /friendship - Cria uma amizade
+```bash
+{
+"friendId":id do amigo 
+}
+```
+- PUT /friendship/status - Mostra o status atual de uma amizade
+```bash
+{
+"code":"código",
+"friendId":id do amigo,
+"status":"PENDING/OK/BLOCKED/DECLINED"
+}
+```
+- DELETE /friendship - Delete um usuário
+```bash
+{
+"code":"código",
+"friendId":"id do amigo"
+}
+```
+- GET /friendship - Apresenta a lista de usuários amigos do usuário logado
+```bash
+{
+    "id": 12,
+    "player": {
+      "id_player": 10,
+      "name": "Lucas"
+    },
+    "friend": {
+      "id_player": 5,
+      "name": "Ana"
+    },
+    "status": "OK",
+    "createdOn": "2025-09-23",
+    "sinceWhen": "2025-09-24",
+    "code": "550e8400-e29b-41d4-a716-446655440000"
+  }
 ```

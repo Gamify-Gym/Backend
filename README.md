@@ -1,7 +1,10 @@
 # Gamify Gym Backend
 ***
 
-- [**Instalando o projeto**]()
+- [**Instalando o projeto**](#instalando-o-projeto)
+- [**Rodando o projeto com Docker**](#-rodando-o-projeto-com-docker)
+- [**Contribuindo para o projeto**](#-contribuindo-para-o-projeto)
+- [**Requisições**](#requisições)
 
 ## Instalando o projeto
 *** 
@@ -76,8 +79,26 @@ git push origin
 
 ## Requisições
 ***
+- GET /check - Verifica se a API está rodando
 
-### Amizade
+### Usuários
+- POST /user/create - Cria um usuário
+```bash
+{
+"username": "nome do usuário",
+"email": "123@gmail.com",
+"password": "senha do usuário"
+}
+```
+- POST /login - Inicia sessão do usuário
+```bash
+{
+"email": "123@gmail.com",
+"password": "senha do usuário"
+}
+```
+
+### Amizades
 - POST /friendship - Cria uma amizade
 ```bash
 {
@@ -92,7 +113,7 @@ git push origin
 "status":"PENDING/OK/BLOCKED/DECLINED"
 }
 ```
-- DELETE /friendship - Delete um usuário
+- DELETE /friendship - Delete uma amizade
 ```bash
 {
 "code":"código",

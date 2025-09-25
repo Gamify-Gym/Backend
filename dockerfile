@@ -5,6 +5,9 @@ RUN apt-get install openjdk-21-jdk maven -y
 
 COPY . .
 
+RUN openssl genrsa -out src/main/resources/app.key 2048 && \
+    openssl rsa -in src/main/resources/app.key -pubout -out src/main/resources/app.pub
+
 RUN mvn clean install
 
 FROM openjdk:21-jdk-slim

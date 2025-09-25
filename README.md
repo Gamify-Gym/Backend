@@ -104,16 +104,31 @@ git push origin
 
 **Auth**
 ```bash
+valor do token
+```
+- POST /user/type - Transforma o usuário em um Player
 
+**Auth**
+```bash
+valor do token
+```
+**Body**
+```bash
+{
+"weight": peso do player,
+"height": altura do player
+}
 ```
 ### Amizades
 - POST /friendship - Cria uma amizade
+  
+**Body**
 ```bash
 {
 "friendId":id do amigo 
 }
 ```
-- PUT /friendship/status - Mostra o status atual de uma amizade
+- PUT /friendship/status - Altera o status atual de uma amizade
 ```bash
 {
 "code":"código",
@@ -130,19 +145,51 @@ git push origin
 ```
 - GET /friendship - Apresenta a lista de usuários amigos do usuário logado
 ```bash
-{
-    "id": 12,
+[
+  {
+    "friendshipId": 1,
     "player": {
-      "id_player": 10,
-      "name": "Lucas"
+      "id_player": 1,
+      "height": 180.0,
+      "weight": 60.0,
+      "weeklyTargetDays": 2,
+      "weeklyStreak": 0,
+      "lastWeekOfYear": 0,
+      "currentWeekTrainedDays": 0,
+      "workouts": [],
+      "user": {
+        "id_user": 2,
+        "username": "123",
+        "email": "12345@gmail.com",
+        "password": "$2a$10$VLkNSrGkdstt2P4GOcb6Ee6mW0//vGzyReVIDDD9lxskKnnnJy2Vi"
+      },
+      "personalTrainer": null,
+      "nutritionist": null,
+      "activities": []
     },
     "friend": {
-      "id_player": 5,
-      "name": "Ana"
+      "id_player": 2,
+      "height": 150.0,
+      "weight": 90.0,
+      "weeklyTargetDays": 2,
+      "weeklyStreak": 0,
+      "lastWeekOfYear": 0,
+      "currentWeekTrainedDays": 0,
+      "workouts": [],
+      "user": {
+        "id_user": 1,
+        "username": "nome do usuário",
+        "email": "123@gmail.com",
+        "password": "$2a$10$5uWCqbeBgQnYp6MiB6Lz1ucDXRU5tDCWpp3voS9i8RVIUefKf6bfy"
+      },
+      "personalTrainer": null,
+      "nutritionist": null,
+      "activities": []
     },
-    "status": "OK",
-    "createdOn": "2025-09-23",
-    "sinceWhen": "2025-09-24",
-    "code": "550e8400-e29b-41d4-a716-446655440000"
+    "sinceWhen": null,
+    "status": "PENDING",
+    "createdOn": "2025-09-25",
+    "friendCode": null
   }
+]
 ```

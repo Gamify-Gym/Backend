@@ -47,7 +47,7 @@ public class FriendshipController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             Friendship friendship = friendshipService.changeFriendshipStatus(
-                    request.code(), email, request.friendId(), request.status());
+                    request.friendshipId(), email, request.friendId(), request.status());
             return ResponseEntity.ok(friendship);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());

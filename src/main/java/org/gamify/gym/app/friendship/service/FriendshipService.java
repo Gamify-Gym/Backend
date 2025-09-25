@@ -53,8 +53,9 @@ public class FriendshipService {
         return friendshipRepository.save(friendship);
     }
 
-    public Friendship changeFriendshipStatus(UUID code, String email, Long friendId, Status status) {
-        Friendship friendship = friendshipRepository.findByFriendCode(code);
+    public Friendship changeFriendshipStatus(Long friendshipId, String email, Long friendId, Status status) {
+        Friendship friendship = friendshipRepository.findById(friendshipId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         LocalDate date = LocalDate.now();
 
         Player player = playerRepository.findByUserEmail(email)

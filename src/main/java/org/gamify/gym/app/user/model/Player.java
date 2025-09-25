@@ -24,13 +24,25 @@ import jakarta.persistence.Table;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_player;
+    private Long id_player;
 
     @Column
     private Double height;
 
     @Column
     private Double weight;
+
+    @Column
+    private Integer weeklyTargetDays = 2;
+
+    @Column
+    private Integer weeklyStreak = 0;
+
+    @Column
+    private Integer lastWeekOfYear = 0;
+
+    @Column
+    private Integer currentWeekTrainedDays = 0;
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -99,4 +111,49 @@ public class Player {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<PlayerActivity> activities;
+
+    public Integer getWeeklyTargetDays() {
+        return weeklyTargetDays;
+    }
+
+    public void setWeeklyTargetDays(Integer weeklyTargetDays) {
+        this.weeklyTargetDays = weeklyTargetDays;
+    }
+
+    public Integer getWeeklyStreak() {
+        return weeklyStreak;
+    }
+
+    public void setWeeklyStreak(Integer weeklyStreak) {
+        this.weeklyStreak = weeklyStreak;
+    }
+
+    public Integer getLastWeekOfYear() {
+        return lastWeekOfYear;
+    }
+
+    public void setLastWeekOfYear(Integer lastWeekOfYear) {
+        this.lastWeekOfYear = lastWeekOfYear;
+    }
+
+    public Integer getCurrentWeekTrainedDays() {
+        return currentWeekTrainedDays;
+    }
+
+    public void setCurrentWeekTrainedDays(Integer currentWeekTrainedDays) {
+        this.currentWeekTrainedDays = currentWeekTrainedDays;
+    }
+
+    public List<PlayerActivity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<PlayerActivity> activities) {
+        this.activities = activities;
+    }
+
+    public Long getId_player() {
+        return id_player;
+    }
+
 }

@@ -79,10 +79,11 @@ git push origin
 
 ## Requisições
 ***
-- GET /check - Verifica se a API está rodando
 
 ### Usuários
 - POST /user/create - Cria um usuário
+
+**Body**
 ```bash
 {
 "username": "nome do usuário",
@@ -91,13 +92,20 @@ git push origin
 }
 ```
 - POST /login - Inicia sessão do usuário
+
+**Body**
 ```bash
 {
 "email": "123@gmail.com",
 "password": "senha do usuário"
 }
 ```
+- GET /check - Verifica se o token é válido
 
+**Auth**
+```bash
+
+```
 ### Amizades
 - POST /friendship - Cria uma amizade
 ```bash

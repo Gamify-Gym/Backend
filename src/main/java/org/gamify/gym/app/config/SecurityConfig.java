@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/login", "/user/create").permitAll()
                                 .anyRequest().authenticated())
+                .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(
                         conf -> conf.jwt(Customizer.withDefaults()));

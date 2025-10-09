@@ -2,6 +2,7 @@ package org.gamify.gym.app.user.model;
 
 import java.util.List;
 
+import org.gamify.gym.app.dieta.model.Dieta;
 import org.gamify.gym.app.streak.model.PlayerActivity;
 import org.gamify.gym.app.training.model.Workout;
 
@@ -72,6 +73,10 @@ public class Player {
     @JoinColumn(name = "personal_trainer_id")
     private PersonalTrainer personalTrainer;
 
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Dieta> dietas;
+
     public Double getHeight() {
         return height;
     }
@@ -94,6 +99,14 @@ public class Player {
 
     public void setPersonalTrainer(PersonalTrainer personalTrainer) {
         this.personalTrainer = personalTrainer;
+    }
+
+    public List<Dieta> getDietas() {
+        return dietas;
+    }
+
+    public void setDietas(List<Dieta> dietas) {
+        this.dietas = dietas;
     }
 
     public Nutritionist getNutritionist() {

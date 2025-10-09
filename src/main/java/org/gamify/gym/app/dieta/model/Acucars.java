@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Acucars extends Alimento {
+public class Acucars {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,4 +17,28 @@ public class Acucars extends Alimento {
 
     @Column
     private Double acucarAdicionado;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getAcucarTotal() {
+        return acucarTotal;
+    }
+
+    public void setAcucarTotal(Double acucarTotal) {
+        this.acucarTotal = acucarTotal;
+    }
+
+    public Double getAcucarAdicionado() {
+        return acucarAdicionado;
+    }
+
+    public void setAcucarAdicionado(Double acucarAdicionado) {
+        this.acucarAdicionado = acucarAdicionado;
+    }
 }

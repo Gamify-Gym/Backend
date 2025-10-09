@@ -2,6 +2,7 @@ package org.gamify.gym.app.dieta.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Alimento {
@@ -36,6 +38,14 @@ public class Alimento {
 
     @Column
     private Double proteins;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "acucars_id")
+    private Acucars acucars;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "gorduras_id")
+    private Gorduras gorduras;
 
     @ManyToOne
     @JoinColumn(name = "dietaId")
@@ -112,6 +122,22 @@ public class Alimento {
 
     public void setDieta(Dieta dieta) {
         this.dieta = dieta;
+    }
+
+    public Acucars getAcucars() {
+        return acucars;
+    }
+
+    public void setAcucars(Acucars acucars) {
+        this.acucars = acucars;
+    }
+
+    public Gorduras getGorduras() {
+        return gorduras;
+    }
+
+    public void setGorduras(Gorduras gorduras) {
+        this.gorduras = gorduras;
     }
 
 }

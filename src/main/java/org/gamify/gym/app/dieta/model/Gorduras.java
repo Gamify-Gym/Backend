@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Gorduras extends Alimento {
+public class Gorduras {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +24,44 @@ public class Gorduras extends Alimento {
 
     @Column
     private Double gordurasSaturadas;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getGorduraTrans() {
+        return gorduraTrans;
+    }
+
+    public void setGorduraTrans(Double gorduraTrans) {
+        this.gorduraTrans = gorduraTrans;
+    }
+
+    public Double getGordurasMonosaturadas() {
+        return gordurasMonosaturadas;
+    }
+
+    public void setGordurasMonosaturadas(Double gordurasMonosaturadas) {
+        this.gordurasMonosaturadas = gordurasMonosaturadas;
+    }
+
+    public Double getGordurasPoliinsaturadas() {
+        return gordurasPoliinsaturadas;
+    }
+
+    public void setGordurasPoliinsaturadas(Double gordurasPoliinsaturadas) {
+        this.gordurasPoliinsaturadas = gordurasPoliinsaturadas;
+    }
+
+    public Double getGordurasSaturadas() {
+        return gordurasSaturadas;
+    }
+
+    public void setGordurasSaturadas(Double gordurasSaturadas) {
+        this.gordurasSaturadas = gordurasSaturadas;
+    }
 }

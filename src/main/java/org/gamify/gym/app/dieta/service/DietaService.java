@@ -1,5 +1,7 @@
 package org.gamify.gym.app.dieta.service;
 
-public class DietaService {
+import org.springframework.stereotype.Service;
 
+@Service
+public class DietaService {
 }

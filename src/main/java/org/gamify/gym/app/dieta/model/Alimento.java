@@ -19,8 +19,99 @@ public class Alimento {
     @Column
     private String name;
 
+    @Column
+    private Double calories;
+
+    @Column
+    private Double fats;
+
+    @Column
+    private Double carbs;
+
+    @Column
+    private Double fibers;
+
+    @Column
+    private Double sodium;
+
+    @Column
+    private Double proteins;
+
     @ManyToOne
     @JoinColumn(name = "dietaId")
     @JsonBackReference
     private Dieta dieta;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(Double calories) {
+        this.calories = calories;
+    }
+
+    public Double getFats() {
+        return fats;
+    }
+
+    public void setFats(Double fats) {
+        this.fats = fats;
+    }
+
+    public Double getCarbs() {
+        return carbs;
+    }
+
+    public void setCarbs(Double carbs) {
+        this.carbs = carbs;
+    }
+
+    public Double getFibers() {
+        return fibers;
+    }
+
+    public void setFibers(Double fibers) {
+        this.fibers = fibers;
+    }
+
+    public Double getSodium() {
+        return sodium;
+    }
+
+    public void setSodium(Double sodium) {
+        this.sodium = sodium;
+    }
+
+    public Double getProteins() {
+        return proteins;
+    }
+
+    public void setProteins(Double proteins) {
+        this.proteins = proteins;
+    }
+
+    public Dieta getDieta() {
+        return dieta;
+    }
+
+    public void setDieta(Dieta dieta) {
+        this.dieta = dieta;
+    }
+
 }

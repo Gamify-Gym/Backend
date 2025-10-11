@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+
 
 @Entity
 public class AlimentoLogs {
@@ -19,6 +21,8 @@ public class AlimentoLogs {
     @Column
     private LocalDateTime quandoComido;
 
-    @OneToOne(mappedBy = "alimento_id")
+    @OneToOne
+    @JoinColumn(name = "alimento_id")
     private Alimento alimento;
 }
+

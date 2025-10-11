@@ -85,6 +85,7 @@ public class DietaService {
         alimentoRepository.delete(alimento);
     }
 
+    @Transactional
     public List<Dieta> getDietas(String email) {
         List<Dieta> dietas = dietaRepository.findDietasWithAlimentosByPlayerEmail(email);
         return dietas;

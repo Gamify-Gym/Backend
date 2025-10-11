@@ -30,8 +30,7 @@ public class TrainingController {
 
     private final TrainingService trainingService;
 
-    public TrainingController(TrainingService trainingService, ExerciseRepository exerciseRepository,
-            WorkoutRepository workoutRepository) {
+    public TrainingController(TrainingService trainingService) {
         this.trainingService = trainingService;
     }
 

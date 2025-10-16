@@ -69,19 +69,15 @@ public class DietaService {
         if (!alimento.getDieta().getPlayer().getUser().getEmail().equals(email)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-
         return alimentoRepository.save(alimento);
-
     }
 
     @Transactional
     public void deleteAlimento(String email, Long idAlimento) {
         Alimento alimento = alimentoRepository.findById(idAlimento)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
         if (!alimento.getDieta().getPlayer().getUser().getEmail().equals(email))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-
         alimentoRepository.delete(alimento);
     }
 

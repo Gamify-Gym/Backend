@@ -34,4 +34,12 @@ public class DietaController {
         }
      }
 
+     @DeleteMapping(value = "/food")
+     public ResponseEntity<?> delete
+
+     @PostMapping(value = "/plan", produces = "application/json")
+
+     @PostMapping(value = "/food", produces = "application/json")
+
+
 }

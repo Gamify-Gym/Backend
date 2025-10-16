@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,10 +38,25 @@ public class DietaController {
 
      @DeleteMapping(value = "/food")
      public ResponseEntity<?> delete
+ @PostMapping(value = "/food", produces = "application/json")
+
 
      @PostMapping(value = "/plan", produces = "application/json")
+   
+        public ResponseEntity<?> insertDieta(@RequestBody String nomeDieta, Authentication authentication) {
+            try {
+                Jwt jwt = (Jwt) authentication.getPrincipal();
+                String email = jwt.getClaimAsString("sub");
+                dietaService.insertDieta(email, nomeDieta);
+                Dieta dieta = dietaService.insertDieta(email, nomeDieta);
+                 return ResponseEntity.ok(dieta);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }}
+            
+        
 
-     @PostMapping(value = "/food", produces = "application/json")
 
 
-}

@@ -39,7 +39,7 @@ public class TrainingController {
             String email = jwt.getClaimAsString("sub");
             Exercise exercise = trainingService.insertExercise(email, dto.getNameExercise(), dto.getMuscles(),
                     dto.getRepeticoes(), dto.getSeries(), dto.getWorkout_name());
-            return ResponseEntity.ok(exercise);
+            return ResponseEntity.status(HttpStatus.CREATED).body(exercise);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -52,7 +52,7 @@ public class TrainingController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             Workout workout = trainingService.insertWorkout(email, dto.getName(), dto.getDescription());
-            return ResponseEntity.ok(workout);
+            return ResponseEntity.status(HttpStatus.CREATED).body(workout);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -65,7 +65,7 @@ public class TrainingController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             trainingService.deleteWorkout(email, workoutName);
-            return ResponseEntity.ok("Succesfully deleted workout with name: " + workoutName);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -78,7 +78,7 @@ public class TrainingController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             trainingService.deleteExercise(email, exerciseName);
-            return ResponseEntity.ok("Succesfully deleted workout with name: " + exerciseName);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());

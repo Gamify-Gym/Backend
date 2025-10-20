@@ -45,7 +45,7 @@ public class DietaController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             Dieta dieta = dietaService.insertDieta(email, nomeDieta);
-                return ResponseEntity.ok(dieta);
+            return ResponseEntity.status(HttpStatus.CREATED).body(dieta);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -53,26 +53,26 @@ public class DietaController {
     }
 
     @DeleteMapping(value = "/food")
-    public ResponseEntity<?> deleteFood(Authentication authentication,Long idAlimento) {
-        try {   
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String email = jwt.getClaimAsString("sub");
-        dietaService.deleteAlimento(email, idAlimento);
-        return ResponseEntity.ok("Succesfully deleted food");
+    public ResponseEntity<?> deleteFood(Authentication authentication, Long idAlimento) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            dietaService.deleteAlimento(email, idAlimento);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
         }
-     }
+    }
 
 
     @PostMapping(value = "/food", produces = "application/json")
-    public ResponseEntity<?> insertFood(@RequestBody AlimentoDto dto,Authentication authentication) {
+    public ResponseEntity<?> insertFood(@RequestBody AlimentoDto dto, Authentication authentication) {
         try {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
-            Alimento food = dietaService.insertAlimentos(email,dto.idDieta() ,dto);
-            return ResponseEntity.ok(food);
+            Alimento food = dietaService.insertAlimentos(email, dto.idDieta(), dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(food);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());

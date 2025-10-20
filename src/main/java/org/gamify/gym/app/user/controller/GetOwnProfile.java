@@ -3,7 +3,6 @@ package org.gamify.gym.app.user.controller;
 import org.gamify.gym.app.user.model.Player;
 import org.gamify.gym.app.user.repository.PlayerRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;

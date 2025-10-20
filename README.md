@@ -193,3 +193,22 @@ valor do token
   }
 ]
 ```
+
+### Dietas
+- GET /diet/plan - Apresenta a lista de dietas do usuário
+```bash
+
+```
+
+- POST /diet/plan - Cria um plano de dieta
+```bash
+
+```
+
+- POST /diet/food - Cria um alimento para um plano de dieta
+```bash
+{
+"nome": 
+}
+```
+

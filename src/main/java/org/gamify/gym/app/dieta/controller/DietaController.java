@@ -44,7 +44,6 @@ public class DietaController {
         try {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
-            dietaService.insertDieta(email, nomeDieta);
             Dieta dieta = dietaService.insertDieta(email, nomeDieta);
                 return ResponseEntity.ok(dieta);
         } catch (Exception e) {
@@ -79,7 +78,6 @@ public class DietaController {
                     .body("Error: " + e.getMessage());
         }
     }
-
     }
             
         

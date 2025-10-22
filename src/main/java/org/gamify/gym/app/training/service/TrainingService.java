@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
+import org.gamify.gym.app.training.model.ExerciseLog;
 import org.gamify.gym.app.training.model.Workout;
 import org.gamify.gym.app.training.repository.ExerciseRepository;
+import org.gamify.gym.app.training.repository.ExerciseLogRepository;
 import org.gamify.gym.app.training.repository.WorkoutRepository;
+import org.gamify.gym.app.user.model.Player;
 import org.gamify.gym.app.user.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,9 @@ public class TrainingService {
 
         @Autowired
         private ExerciseRepository exerciseRepository;
+
+        @Autowired
+        private ExerciseLogRepository exerciseLogRepository;
 
         public TrainingService(PlayerRepository playerRepository, WorkoutRepository workoutRepository,
                         ExerciseRepository exerciseRepository) {
@@ -53,6 +59,24 @@ public class TrainingService {
                 }
 
                 return exerciseRepository.save(exercise);
+        }
+
+        @Transactional
+        public ExerciseLog insertExerciseLog(Double weight, int reps, String email,
+                        String exerciseName) {
+                Player player = playerRepository.findByUserEmail(email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName,email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                
+                ExerciseLog exerciseLog = new ExerciseLog();
+                exerciseLog.setWeight(weight);
+                exerciseLog.setReps(reps);
+                exerciseLog.setPlayer(player);
+                exerciseLog.setExercise(exercise);
+
+                
+                return exerciseLogRepository.save(exerciseLog);
         }
 
         @Transactional

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(value = "/diet")
@@ -33,6 +34,9 @@ public class DietaController {
             String email = jwt.getClaimAsString("sub");
             List<Dieta> diets = dietaService.getDietas(email);
             return ResponseEntity.ok(diets);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -46,6 +50,9 @@ public class DietaController {
             String email = jwt.getClaimAsString("sub");
             Dieta dieta = dietaService.insertDieta(email, nomeDieta);
             return ResponseEntity.status(HttpStatus.CREATED).body(dieta);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -59,6 +66,9 @@ public class DietaController {
             String email = jwt.getClaimAsString("sub");
             dietaService.deleteAlimento(email, idAlimento);
             return ResponseEntity.noContent().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -73,6 +83,9 @@ public class DietaController {
             String email = jwt.getClaimAsString("sub");
             Alimento food = dietaService.insertAlimentos(email, dto.idDieta(), dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(food);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());

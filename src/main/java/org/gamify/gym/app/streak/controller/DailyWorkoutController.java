@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -34,6 +35,9 @@ public class DailyWorkoutController {
             PlayerActivity activity = streakService.insertDailyActivity(email, dto.getStatus(), dto.getWorkoutName(),
                     Optional.ofNullable(dto.getToday()));
             return ResponseEntity.ok(activity);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -47,6 +51,9 @@ public class DailyWorkoutController {
             String email = jwt.getClaimAsString("sub");
             List<PlayerActivity> activities = streakService.findDailyActivity(email);
             return ResponseEntity.ok(activities);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -60,6 +67,9 @@ public class DailyWorkoutController {
             String email = jwt.getClaimAsString("sub");
             Player player = streakService.setWeeklyTargetDays(email, targetDays);
             return ResponseEntity.ok(player);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -73,6 +83,9 @@ public class DailyWorkoutController {
             String email = jwt.getClaimAsString("sub");
             Player player = streakService.getPlayerStreakInfo(email);
             return ResponseEntity.ok(player);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());

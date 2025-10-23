@@ -66,16 +66,15 @@ public class TrainingService {
                         String exerciseName) {
                 Player player = playerRepository.findByUserEmail(email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName,email)
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-                
+
                 ExerciseLog exerciseLog = new ExerciseLog();
                 exerciseLog.setWeight(weight);
                 exerciseLog.setReps(reps);
                 exerciseLog.setPlayer(player);
                 exerciseLog.setExercise(exercise);
 
-                
                 return exerciseLogRepository.save(exerciseLog);
         }
 
@@ -170,6 +169,16 @@ public class TrainingService {
                                         totalSeries));
                 }
                 return dtos;
+        }
+
+        public Exercise getExerciseById(String email, Long id) {
+                Exercise exercise = exerciseRepository.findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+                if (!exercise.getWorkout().getPlayer().getUser().equals(email)) {
+                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+                }
+                return exercise;
         }
 
 }

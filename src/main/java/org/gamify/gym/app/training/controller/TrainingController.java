@@ -5,9 +5,11 @@ import java.util.List;
 import org.gamify.gym.app.training.dto.AlterExerciseDto;
 import org.gamify.gym.app.training.dto.AlterWorkoutDto;
 import org.gamify.gym.app.training.dto.CreateExerciseDto;
+import org.gamify.gym.app.training.dto.CreateExerciseLogDto;
 import org.gamify.gym.app.training.dto.CreateWorkoutDto;
 import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
+import org.gamify.gym.app.training.model.ExerciseLog;
 import org.gamify.gym.app.training.model.Workout;
 import org.gamify.gym.app.training.service.TrainingService;
 import org.springframework.http.HttpStatus;
@@ -48,6 +50,23 @@ public class TrainingController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping(value= "/exercise/log") 
+    public ResponseEntity<?> insertExerciseLog(@RequestBody CreateExerciseLogDto dto, Authentication authentication) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            ExerciseLog exerciseLog = trainingService.insertExerciseLog(dto.getWeight(), dto.getReps()
+                , email, dto.getExerciseName(), dto.getTimeIn(), dto.getDayMade());
+            return ResponseEntity.status(HttpStatus.CREATED).body(exerciseLog);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error: " + e.getMessage());
         }
     }
 

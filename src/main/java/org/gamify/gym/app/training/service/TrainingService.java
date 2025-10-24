@@ -1,5 +1,8 @@
 package org.gamify.gym.app.training.service;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +66,7 @@ public class TrainingService {
 
         @Transactional
         public ExerciseLog insertExerciseLog(Double weight, int reps, String email,
-                        String exerciseName) {
+                        String exerciseName, Time time_in, Date day_made ) {
                 Player player = playerRepository.findByUserEmail(email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
                 Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
@@ -74,6 +77,8 @@ public class TrainingService {
                 exerciseLog.setReps(reps);
                 exerciseLog.setPlayer(player);
                 exerciseLog.setExercise(exercise);
+                exerciseLog.setTimeIn(time_in);
+                exerciseLog.setDayMade(day_made);
 
                 return exerciseLogRepository.save(exerciseLog);
         }

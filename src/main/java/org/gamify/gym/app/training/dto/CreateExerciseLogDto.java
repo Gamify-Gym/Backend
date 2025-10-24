@@ -1,15 +1,16 @@
 package org.gamify.gym.app.training.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.sql.Date;
+import java.sql.Time;
 
 public class CreateExerciseLogDto {
     private Double weight;
     private int reps;
-    private LocalTime timeIn;
-    private LocalDate dayMade;
+    private Time timeIn;
+    private Date dayMade;
     private Long playerId;
     private Long exerciseId;
+    private String exerciseName;
 
     public Double getWeight() {
         return weight;
@@ -27,19 +28,19 @@ public class CreateExerciseLogDto {
         this.reps = reps;
     }
 
-    public LocalTime getTimeIn() {
+    public Time getTimeIn() {
         return timeIn;
     }
 
-    public void setTimeIn(LocalTime timeIn) {
+    public void setTimeIn(Time timeIn) {
         this.timeIn = timeIn;
     }
 
-    public LocalDate getDayMade() {
+    public Date getDayMade() {
         return dayMade;
     }
 
-    public void setDayMade(LocalDate dayMade) {
+    public void setDayMade(Date dayMade) {
         this.dayMade = dayMade;
     }
 
@@ -57,5 +58,13 @@ public class CreateExerciseLogDto {
 
     public void setExerciseId(Long exerciseId) {
         this.exerciseId = exerciseId;
+    }
+
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
     }
 }

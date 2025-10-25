@@ -18,6 +18,7 @@ services:
   app:
     container_name: 'GG-Backend'
     environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - DB_HOST=${DB_HOST}
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE}

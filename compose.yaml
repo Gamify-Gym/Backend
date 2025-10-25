@@ -23,6 +23,8 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
     build:
       context: .
       dockerfile: Dockerfile

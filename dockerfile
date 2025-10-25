@@ -1,18 +1,15 @@
-FROM ubuntu:latest AS build
+FROM maven:3.9.11-eclipse-temurin-21-noble AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk maven -y
 
+WORKDIR /app
 COPY . .
-
-RUN openssl genrsa -out src/main/resources/app.key 2048 && \
-    openssl rsa -in src/main/resources/app.key -pubout -out src/main/resources/app.pub
-
 RUN mvn clean install
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jre-jammy as run
 
-EXPOSE $APP_PORT
+WORKDIR /app
+
+EXPOSE 8080
 
 COPY --from=build /target/app-0.0.1-SNAPSHOT.jar /app.jar
 

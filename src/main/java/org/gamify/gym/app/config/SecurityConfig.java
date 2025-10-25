@@ -3,7 +3,6 @@ package org.gamify.gym.app.config;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,18 +25,21 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Value("${jwt.public.key}")
-    private RSAPublicKey key;
-    @Value("${jwt.private.key}")
-    private RSAPrivateKey priv;
+    private final RSAPublicKey key;
+    private final RSAPrivateKey priv;
+
+    public SecurityConfig(RSAPublicKey rsaPublicKey, RSAPrivateKey rsaPrivateKey) {
+        this.key = rsaPublicKey;
+        this.priv = rsaPrivateKey;
+    }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/login", "/user/create").permitAll()
                                 .anyRequest().authenticated())
-                .cors(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(
                         conf -> conf.jwt(Customizer.withDefaults()));

@@ -2,7 +2,6 @@ package org.gamify.gym.app.training.service;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +9,8 @@ import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.model.ExerciseLog;
 import org.gamify.gym.app.training.model.Workout;
-import org.gamify.gym.app.training.repository.ExerciseRepository;
 import org.gamify.gym.app.training.repository.ExerciseLogRepository;
+import org.gamify.gym.app.training.repository.ExerciseRepository;
 import org.gamify.gym.app.training.repository.WorkoutRepository;
 import org.gamify.gym.app.user.model.Player;
 import org.gamify.gym.app.user.repository.PlayerRepository;
@@ -66,7 +65,7 @@ public class TrainingService {
 
         @Transactional
         public ExerciseLog insertExerciseLog(Double weight, int reps, String email,
-                        String exerciseName, Time time_in, Date day_made ) {
+                        String exerciseName, Time time_in, Date day_made) {
                 Player player = playerRepository.findByUserEmail(email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
                 Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)

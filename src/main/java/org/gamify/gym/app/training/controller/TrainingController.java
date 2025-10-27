@@ -118,6 +118,22 @@ public class TrainingController {
         }
     }
 
+    @DeleteMapping(value = "/exercise/log")
+    public ResponseEntity<?> deleteExerciseLog(Authentication authentication, String exerciseName, Long logId) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            trainingService.deleteExerciseLog(email, exerciseName, logId);
+            return ResponseEntity.noContent().build();
+        }  catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
     @PatchMapping(value = "/workout")
     public ResponseEntity<?> alterWorkout(Authentication authentication, @RequestBody AlterWorkoutDto dto) {
         try {

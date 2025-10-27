@@ -111,6 +111,21 @@ public class TrainingService {
         }
 
         @Transactional
+        public void deleteExerciseLog(String email, String exerciseName, Long logId) {
+                Player player = playerRepository.findByUserEmail(email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                ExerciseLog exerciseLog = exerciseLogRepository.findById(logId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise log not found"));
+                
+                if (!exerciseLog.getExercise().equals(exercise) || !exercise.getWorkout().getPlayer().equals(player)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }   
+                exerciseLogRepository.delete(exerciseLog);
+                }
+
+        @Transactional
         public void deleteWorkout(String email, String workoutName) {
                 Workout workout = workoutRepository.findWorkoutByNameAndPlayerEmail(workoutName, email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,

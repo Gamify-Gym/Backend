@@ -54,20 +54,20 @@ public class TrainingController {
         }
     }
 
-    @PostMapping(value= "/exercise/log") 
+    @PostMapping(value = "/exercise/log")
     public ResponseEntity<?> insertExerciseLog(@RequestBody CreateExerciseLogDto dto, Authentication authentication) {
         try {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
-            ExerciseLog exerciseLog = trainingService.insertExerciseLog(dto.getWeight(), dto.getReps()
-                , email, dto.getExerciseName(), dto.getTimeIn(), dto.getDayMade());
+            ExerciseLog exerciseLog = trainingService.insertExerciseLog(dto.getWeight(), dto.getReps(), email,
+                    dto.getExerciseName(), dto.getTimeIn(), dto.getDayMade());
             return ResponseEntity.status(HttpStatus.CREATED).body(exerciseLog);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode())
-                .body("Error: " + e.getReason());
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error: " + e.getMessage());
+                    .body("Error: " + e.getMessage());
         }
     }
 
@@ -126,7 +126,7 @@ public class TrainingController {
             String email = jwt.getClaimAsString("sub");
             trainingService.deleteExerciseLog(email, exerciseName, logId);
             return ResponseEntity.noContent().build();
-        }  catch (ResponseStatusException e) {
+        } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode())
                     .body("Error: " + e.getReason());
         } catch (Exception e) {
@@ -153,11 +153,13 @@ public class TrainingController {
     }
 
     @PatchMapping(value = "/exercise/log")
-    public ResponseEntity<?> alterExerciseLog(Authentication authentication, @RequestBody AlterExerciseLogDto dto, Long logId) {
+    public ResponseEntity<?> alterExerciseLog(Authentication authentication, @RequestBody AlterExerciseLogDto dto,
+            Long logId) {
         try {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String email = jwt.getClaimAsString("sub");
-        ExerciseLog exerciseLog = trainingService.alterExerciseLog(dto.getWeight(), dto.getReps(), email, logId, dto.getExerciseName(),dto.getTimeIn(), dto.getDayMade());
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            ExerciseLog exerciseLog = trainingService.alterExerciseLog(dto.getWeight(), dto.getReps(), email, logId,
+                    dto.getExerciseName(), dto.getTimeIn(), dto.getDayMade());
             return ResponseEntity.ok(exerciseLog);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode())
@@ -167,7 +169,6 @@ public class TrainingController {
                     .body("Error: " + e.getMessage());
         }
     }
-
 
     @PatchMapping(value = "/exercise")
     public ResponseEntity<?> alterExercise(Authentication authentication, @RequestBody AlterExerciseDto dto) {
@@ -202,20 +203,20 @@ public class TrainingController {
         }
     }
 
-    @GetMapping(value = "/exercise/log")
-    public ResponseEntity<?> getExerciseLogs(Authentication authentication) {
-        try {
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            String email = jwt.getClaimAsString("sub");
-             
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode())
-                    .body("Error: " + e.getReason());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error: " + e.getMessage());
-        }
-    }
+    // @GetMapping(value = "/exercise/log")
+    // public ResponseEntity<?> getExerciseLogs(Authentication authentication) {
+    // try {
+    // Jwt jwt = (Jwt) authentication.getPrincipal();
+    // String email = jwt.getClaimAsString("sub");
+
+    // } catch (ResponseStatusException e) {
+    // return ResponseEntity.status(e.getStatusCode())
+    // .body("Error: " + e.getReason());
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body("Error: " + e.getMessage());
+    // }
+    // }
 
     @GetMapping(value = "/exercise/{id}")
     public ResponseEntity<?> getExerciseById(Authentication authentication, @PathVariable Long id) {

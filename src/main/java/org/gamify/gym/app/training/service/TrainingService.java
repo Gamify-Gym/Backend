@@ -153,9 +153,29 @@ public class TrainingService {
         }
 
         @Transactional
-        public Exercise alterExercise(String email, String oldExerciseName, String nameExercise, String muscles,
-                        Integer repeticoes,
-                        Integer series) {
+        public ExerciseLog alterExerciseLog(Double weight, int reps, String email, Long logId,
+                String exerciseName, Time time_in, Date day_made) {
+                ExerciseLog exerciseLog = exerciseLogRepository.findById(logId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Exercise log not found"));
+                Player player = playerRepository.findByUserEmail(email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+                if (!exerciseLog.getExercise().equals(exercise) || !exercise.getWorkout().getPlayer().equals(player)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }  
+                
+                exerciseLog.setWeight(weight);
+                exerciseLog.setReps(reps);
+                exerciseLog.setTimeIn(time_in);
+                exerciseLog.setDayMade(day_made);
+                return exerciseLogRepository.save(exerciseLog);
+        }
+
+        @Transactional
+        public Exercise alterExercise(String email, String oldExerciseName, String nameExercise, String muscles, 
+                        Integer repeticoes,Integer series) {
 
                 Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(oldExerciseName, email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,

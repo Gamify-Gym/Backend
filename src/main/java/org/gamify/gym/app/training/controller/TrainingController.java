@@ -3,6 +3,7 @@ package org.gamify.gym.app.training.controller;
 import java.util.List;
 
 import org.gamify.gym.app.training.dto.AlterExerciseDto;
+import org.gamify.gym.app.training.dto.AlterExerciseLogDto;
 import org.gamify.gym.app.training.dto.AlterWorkoutDto;
 import org.gamify.gym.app.training.dto.CreateExerciseDto;
 import org.gamify.gym.app.training.dto.CreateExerciseLogDto;
@@ -150,6 +151,23 @@ public class TrainingController {
                     .body("Error: " + e.getMessage());
         }
     }
+
+    @PatchMapping(value = "/exercise/log")
+    public ResponseEntity<?> alterExerciseLog(Authentication authentication, @RequestBody AlterExerciseLogDto dto, Long logId) {
+        try {
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String email = jwt.getClaimAsString("sub");
+        ExerciseLog exerciseLog = trainingService.alterExerciseLog(dto.getWeight(), dto.getReps(), email, logId, dto.getExerciseName(),dto.getTimeIn(), dto.getDayMade());
+            return ResponseEntity.ok(exerciseLog);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
 
     @PatchMapping(value = "/exercise")
     public ResponseEntity<?> alterExercise(Authentication authentication, @RequestBody AlterExerciseDto dto) {

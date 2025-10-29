@@ -202,6 +202,21 @@ public class TrainingController {
         }
     }
 
+    @GetMapping(value = "/exercise/log")
+    public ResponseEntity<?> getExerciseLogs(Authentication authentication) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+             
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
     @GetMapping(value = "/exercise/{id}")
     public ResponseEntity<?> getExerciseById(Authentication authentication, @PathVariable Long id) {
         try {

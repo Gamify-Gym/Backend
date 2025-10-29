@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gamify.gym.app.training.dto.ExerciseLogListResponseDto;
 import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.model.ExerciseLog;
@@ -190,6 +191,7 @@ public class TrainingService {
                 return exerciseRepository.save(exercise);
         }
 
+        @Transactional
         public List<WorkoutResponseDto> getWorkout(String email) {
                 List<Workout> workout = workoutRepository.findAllWorkouts(email);
                 if (workout.isEmpty()) {
@@ -210,6 +212,13 @@ public class TrainingService {
                 return dtos;
         }
 
+        @Transactional
+        public List<ExerciseLogListResponseDto> getExerciseLog() {
+                List<ExerciseLog> exerciseLogs = exerciseLogRepository.findAllExerciseLogs();
+                return dtos;
+        }
+
+        @Transactional
         public Exercise getExerciseById(String email, Long id) {
                 Exercise exercise = exerciseRepository.findById(id)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

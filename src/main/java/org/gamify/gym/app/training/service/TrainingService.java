@@ -214,8 +214,8 @@ public class TrainingService {
         }
 
         // @Transactional
-        // public List<ExerciseLogListResponseDto> getExerciseLog() {
-        // List<ExerciseLog> exerciseLogs = exerciseLogRepository.findAllExerciseLogs();
+        // public List<ExerciseLogListResponseDto> getExerciseLog(Long exerciseId) {
+        // List<ExerciseLog> exerciseLogs = exerciseLogRepository.findByExercise_IdExercise(exerciseId);
         // return dtos;
         // }
 

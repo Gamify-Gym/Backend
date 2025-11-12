@@ -25,6 +25,9 @@ public class Workout {
     @Column(name = "name_workout")
     private String name;
 
+    @Column
+    private String description;
+
     public Long getId() {
         return id;
     }
@@ -64,9 +67,6 @@ public class Workout {
     public void setExercises(List<Exercise> exercises) {
         this.exercises = exercises;
     }
-
-    @Column
-    private String description;
 
     @ManyToOne
     @JoinColumn(name = "player_id", nullable = false)

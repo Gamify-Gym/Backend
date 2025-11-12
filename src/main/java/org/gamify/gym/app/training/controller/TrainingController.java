@@ -8,6 +8,7 @@ import org.gamify.gym.app.training.dto.AlterWorkoutDto;
 import org.gamify.gym.app.training.dto.CreateExerciseDto;
 import org.gamify.gym.app.training.dto.CreateExerciseLogDto;
 import org.gamify.gym.app.training.dto.CreateWorkoutDto;
+import org.gamify.gym.app.training.dto.ExerciseLogListResponseDto;
 import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.model.ExerciseLog;
@@ -203,20 +204,21 @@ public class TrainingController {
         }
     }
 
-    // @GetMapping(value = "/exercise/log")
-    // public ResponseEntity<?> getExerciseLogs(Authentication authentication) {
-    // try {
-    // Jwt jwt = (Jwt) authentication.getPrincipal();
-    // String email = jwt.getClaimAsString("sub");
-
-    // } catch (ResponseStatusException e) {
-    // return ResponseEntity.status(e.getStatusCode())
-    // .body("Error: " + e.getReason());
-    // } catch (Exception e) {
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    // .body("Error: " + e.getMessage());
-    // }
-    // }
+     @GetMapping(value = "/exercise/log")
+     public ResponseEntity<?> getExerciseLogs(Authentication authentication, Long exerciseId) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            List<ExerciseLogListResponseDto> exerciseLogs = trainingService.getExerciseLog(exerciseId, email);
+            return ResponseEntity.ok(exerciseLogs);
+        }catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+     }
 
     @GetMapping(value = "/exercise/{id}")
     public ResponseEntity<?> getExerciseById(Authentication authentication, @PathVariable Long id) {

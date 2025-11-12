@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gamify.gym.app.training.dto.ExerciseLogListResponseDto;
 import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
 import org.gamify.gym.app.training.model.ExerciseLog;
@@ -213,11 +214,21 @@ public class TrainingService {
                 return dtos;
         }
 
-        // @Transactional
-        // public List<ExerciseLogListResponseDto> getExerciseLog(Long exerciseId) {
-        // List<ExerciseLog> exerciseLogs = exerciseLogRepository.findByExercise_IdExercise(exerciseId);
-        // return dtos;
-        // }
+         @Transactional
+         public List<ExerciseLogListResponseDto> getExerciseLog(Long exerciseId, String email) {
+                List<ExerciseLog> exerciseLog = exerciseLogRepository.findAllExerciseLogs(email, exerciseId);
+                if (exerciseLog.isEmpty()) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "No exercise logs for this exercise for user");
+                }
+
+                List<ExerciseLogListResponseDto> dtos = new ArrayList<>();
+                for(ExerciseLog l : exerciseLog) {
+                        dtos.add(new ExerciseLogListResponseDto(l.getWeight(), l.getReps(), l.getTimeIn(), l.getDayMade()));
+                }
+
+                return dtos;
+         }
 
         @Transactional
         public Exercise getExerciseById(String email, Long id) {

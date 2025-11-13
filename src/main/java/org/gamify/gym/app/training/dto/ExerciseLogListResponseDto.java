@@ -43,4 +43,12 @@ public class ExerciseLogListResponseDto {
     public void setDayMade(Date day_made) {
         this.day_made = day_made;
     }
+
+    public ExerciseLogListResponseDto(Double weight, int reps, Time time_in, Date day_made) {
+        this.weight = weight;
+        this.reps = reps;
+        this.time_in = time_in;
+        this.day_made = day_made;
+    }
+
 }

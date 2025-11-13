@@ -214,8 +214,8 @@ public class TrainingService {
                 return dtos;
         }
 
-         @Transactional
-         public List<ExerciseLogListResponseDto> getExerciseLog(Long exerciseId, String email) {
+        @Transactional
+        public List<ExerciseLogListResponseDto> getExerciseLog(Long exerciseId, String email) {
                 List<ExerciseLog> exerciseLog = exerciseLogRepository.findAllExerciseLogs(email, exerciseId);
                 if (exerciseLog.isEmpty()) {
                         throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -223,19 +223,20 @@ public class TrainingService {
                 }
 
                 List<ExerciseLogListResponseDto> dtos = new ArrayList<>();
-                for(ExerciseLog l : exerciseLog) {
-                        dtos.add(new ExerciseLogListResponseDto(l.getWeight(), l.getReps(), l.getTimeIn(), l.getDayMade()));
+                for (ExerciseLog l : exerciseLog) {
+                        dtos.add(new ExerciseLogListResponseDto(l.getWeight(), l.getReps(), l.getTimeIn(),
+                                        l.getDayMade()));
                 }
 
                 return dtos;
-         }
+        }
 
         @Transactional
         public Exercise getExerciseById(String email, Long id) {
                 Exercise exercise = exerciseRepository.findById(id)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-                if (!exercise.getWorkout().getPlayer().getUser().equals(email)) {
+                if (!exercise.getWorkout().getPlayer().getUser().getEmail().equals(email)) {
                         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
                 }
                 return exercise;

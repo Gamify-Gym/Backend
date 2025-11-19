@@ -3,26 +3,30 @@ package org.gamify.gym.app.training.controller;
 import java.util.List;
 
 import org.gamify.gym.app.training.dto.AlterExerciseDto;
+import org.gamify.gym.app.training.dto.AlterExerciseLogDto;
 import org.gamify.gym.app.training.dto.AlterWorkoutDto;
 import org.gamify.gym.app.training.dto.CreateExerciseDto;
+import org.gamify.gym.app.training.dto.CreateExerciseLogDto;
 import org.gamify.gym.app.training.dto.CreateWorkoutDto;
+import org.gamify.gym.app.training.dto.ExerciseLogListResponseDto;
 import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
+import org.gamify.gym.app.training.model.ExerciseLog;
 import org.gamify.gym.app.training.model.Workout;
-import org.gamify.gym.app.training.repository.ExerciseRepository;
-import org.gamify.gym.app.training.repository.WorkoutRepository;
 import org.gamify.gym.app.training.service.TrainingService;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController()
 @RequestMapping(value = "/training")
@@ -30,8 +34,7 @@ public class TrainingController {
 
     private final TrainingService trainingService;
 
-    public TrainingController(TrainingService trainingService, ExerciseRepository exerciseRepository,
-            WorkoutRepository workoutRepository) {
+    public TrainingController(TrainingService trainingService) {
         this.trainingService = trainingService;
     }
 
@@ -42,7 +45,27 @@ public class TrainingController {
             String email = jwt.getClaimAsString("sub");
             Exercise exercise = trainingService.insertExercise(email, dto.getNameExercise(), dto.getMuscles(),
                     dto.getRepeticoes(), dto.getSeries(), dto.getWorkout_name());
-            return ResponseEntity.ok(exercise);
+            return ResponseEntity.status(HttpStatus.CREATED).body(exercise);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/exercise/log")
+    public ResponseEntity<?> insertExerciseLog(@RequestBody CreateExerciseLogDto dto, Authentication authentication) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            ExerciseLog exerciseLog = trainingService.insertExerciseLog(dto.getWeight(), dto.getReps(), email,
+                    dto.getExerciseName(), dto.getTimeIn(), dto.getDayMade());
+            return ResponseEntity.status(HttpStatus.CREATED).body(exerciseLog);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -55,7 +78,10 @@ public class TrainingController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             Workout workout = trainingService.insertWorkout(email, dto.getName(), dto.getDescription());
-            return ResponseEntity.ok(workout);
+            return ResponseEntity.status(HttpStatus.CREATED).body(workout);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -68,7 +94,10 @@ public class TrainingController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             trainingService.deleteWorkout(email, workoutName);
-            return ResponseEntity.ok("Succesfully deleted workout with name: " + workoutName);
+            return ResponseEntity.noContent().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -81,7 +110,26 @@ public class TrainingController {
             Jwt jwt = (Jwt) authentication.getPrincipal();
             String email = jwt.getClaimAsString("sub");
             trainingService.deleteExercise(email, exerciseName);
-            return ResponseEntity.ok("Succesfully deleted workout with name: " + exerciseName);
+            return ResponseEntity.noContent().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping(value = "/exercise/log")
+    public ResponseEntity<?> deleteExerciseLog(Authentication authentication, String exerciseName, Long logId) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            trainingService.deleteExerciseLog(email, exerciseName, logId);
+            return ResponseEntity.noContent().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -96,7 +144,27 @@ public class TrainingController {
             Workout workout = trainingService.alterWorkout(email, dto.getOldWorkoutName(), dto.getNewName(),
                     dto.getDescription());
             return ResponseEntity.ok(workout);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
 
+    @PatchMapping(value = "/exercise/log")
+    public ResponseEntity<?> alterExerciseLog(Authentication authentication, @RequestBody AlterExerciseLogDto dto,
+            Long logId) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            ExerciseLog exerciseLog = trainingService.alterExerciseLog(dto.getWeight(), dto.getReps(), email, logId,
+                    dto.getExerciseName(), dto.getTimeIn(), dto.getDayMade());
+            return ResponseEntity.ok(exerciseLog);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -111,6 +179,9 @@ public class TrainingController {
             Exercise exercise = trainingService.alterExercise(email, dto.getOldExerciseName(), dto.getNewName(),
                     dto.getMuscles(), dto.getRepeticoes(), dto.getSeries());
             return ResponseEntity.ok(exercise);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
@@ -124,6 +195,41 @@ public class TrainingController {
             String email = jwt.getClaimAsString("sub");
             List<WorkoutResponseDto> workouts = trainingService.getWorkout(email);
             return ResponseEntity.ok(workouts);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
+     @GetMapping(value = "/exercise/log")
+     public ResponseEntity<?> getExerciseLogs(Authentication authentication, Long exerciseId) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            List<ExerciseLogListResponseDto> exerciseLogs = trainingService.getExerciseLog(exerciseId, email);
+            return ResponseEntity.ok(exerciseLogs);
+        }catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+     }
+
+    @GetMapping(value = "/exercise/{id}")
+    public ResponseEntity<?> getExerciseById(Authentication authentication, @PathVariable Long id) {
+        try {
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String email = jwt.getClaimAsString("sub");
+            Exercise exercise = trainingService.getExerciseById(email, id);
+            return ResponseEntity.ok(exercise);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode())
+                    .body("Error: " + e.getReason());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());

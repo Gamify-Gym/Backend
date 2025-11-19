@@ -20,7 +20,10 @@ public class CreateUser {
     public ResponseEntity<?> createUser(@RequestBody UserCreationRequest request) {
         try {
             var user = userService.createUser(request.getUsername(), request.getEmail(), request.getPassword());
-            return ResponseEntity.ok(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro de validação: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao criar usuário: " + e.getMessage());

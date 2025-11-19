@@ -1,16 +1,16 @@
-FROM ubuntu:latest AS build
+FROM maven:3.9.11-eclipse-temurin-21-noble AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk maven -y
 
+WORKDIR /app
 COPY . .
+RUN mvn clean package
 
-RUN mvn clean install
+FROM eclipse-temurin:21-jre-jammy AS run
 
-FROM openjdk:21-jdk-slim
+WORKDIR /app
 
-EXPOSE $APP_PORT
+EXPOSE 8080
 
-COPY --from=build /target/app-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=build /app/target/app-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT [ "java","-jar","app.jar" ]

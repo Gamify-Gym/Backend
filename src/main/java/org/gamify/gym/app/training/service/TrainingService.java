@@ -1,13 +1,19 @@
 package org.gamify.gym.app.training.service;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gamify.gym.app.training.dto.ExerciseLogListResponseDto;
 import org.gamify.gym.app.training.dto.WorkoutResponseDto;
 import org.gamify.gym.app.training.model.Exercise;
+import org.gamify.gym.app.training.model.ExerciseLog;
 import org.gamify.gym.app.training.model.Workout;
+import org.gamify.gym.app.training.repository.ExerciseLogRepository;
 import org.gamify.gym.app.training.repository.ExerciseRepository;
 import org.gamify.gym.app.training.repository.WorkoutRepository;
+import org.gamify.gym.app.user.model.Player;
 import org.gamify.gym.app.user.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +32,9 @@ public class TrainingService {
 
         @Autowired
         private ExerciseRepository exerciseRepository;
+
+        @Autowired
+        private ExerciseLogRepository exerciseLogRepository;
 
         public TrainingService(PlayerRepository playerRepository, WorkoutRepository workoutRepository,
                         ExerciseRepository exerciseRepository) {
@@ -53,6 +62,25 @@ public class TrainingService {
                 }
 
                 return exerciseRepository.save(exercise);
+        }
+
+        @Transactional
+        public ExerciseLog insertExerciseLog(Double weight, int reps, String email,
+                        String exerciseName, Time time_in, Date day_made) {
+                Player player = playerRepository.findByUserEmail(email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+                ExerciseLog exerciseLog = new ExerciseLog();
+                exerciseLog.setWeight(weight);
+                exerciseLog.setReps(reps);
+                exerciseLog.setPlayer(player);
+                exerciseLog.setExercise(exercise);
+                exerciseLog.setTimeIn(time_in);
+                exerciseLog.setDayMade(day_made);
+
+                return exerciseLogRepository.save(exerciseLog);
         }
 
         @Transactional
@@ -84,6 +112,22 @@ public class TrainingService {
         }
 
         @Transactional
+        public void deleteExerciseLog(String email, String exerciseName, Long logId) {
+                Player player = playerRepository.findByUserEmail(email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                ExerciseLog exerciseLog = exerciseLogRepository.findById(logId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "Exercise log not found"));
+
+                if (!exerciseLog.getExercise().equals(exercise) || !exercise.getWorkout().getPlayer().equals(player)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }
+                exerciseLogRepository.delete(exerciseLog);
+        }
+
+        @Transactional
         public void deleteWorkout(String email, String workoutName) {
                 Workout workout = workoutRepository.findWorkoutByNameAndPlayerEmail(workoutName, email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -111,9 +155,30 @@ public class TrainingService {
         }
 
         @Transactional
+        public ExerciseLog alterExerciseLog(Double weight, int reps, String email, Long logId,
+                        String exerciseName, Time time_in, Date day_made) {
+                ExerciseLog exerciseLog = exerciseLogRepository.findById(logId)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "Exercise log not found"));
+                Player player = playerRepository.findByUserEmail(email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(exerciseName, email)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+                if (!exerciseLog.getExercise().equals(exercise) || !exercise.getWorkout().getPlayer().equals(player)) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+                }
+
+                exerciseLog.setWeight(weight);
+                exerciseLog.setReps(reps);
+                exerciseLog.setTimeIn(time_in);
+                exerciseLog.setDayMade(day_made);
+                return exerciseLogRepository.save(exerciseLog);
+        }
+
+        @Transactional
         public Exercise alterExercise(String email, String oldExerciseName, String nameExercise, String muscles,
-                        Integer repeticoes,
-                        Integer series) {
+                        Integer repeticoes, Integer series) {
 
                 Exercise exercise = exerciseRepository.findExerciseByNameAndEmail(oldExerciseName, email)
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -128,6 +193,7 @@ public class TrainingService {
                 return exerciseRepository.save(exercise);
         }
 
+        @Transactional
         public List<WorkoutResponseDto> getWorkout(String email) {
                 List<Workout> workout = workoutRepository.findAllWorkouts(email);
                 if (workout.isEmpty()) {
@@ -146,6 +212,34 @@ public class TrainingService {
                                         totalSeries));
                 }
                 return dtos;
+        }
+
+        @Transactional
+        public List<ExerciseLogListResponseDto> getExerciseLog(Long exerciseId, String email) {
+                List<ExerciseLog> exerciseLog = exerciseLogRepository.findAllExerciseLogs(email, exerciseId);
+                if (exerciseLog.isEmpty()) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "No exercise logs for this exercise for user");
+                }
+
+                List<ExerciseLogListResponseDto> dtos = new ArrayList<>();
+                for (ExerciseLog l : exerciseLog) {
+                        dtos.add(new ExerciseLogListResponseDto(l.getWeight(), l.getReps(), l.getTimeIn(),
+                                        l.getDayMade()));
+                }
+
+                return dtos;
+        }
+
+        @Transactional
+        public Exercise getExerciseById(String email, Long id) {
+                Exercise exercise = exerciseRepository.findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+                if (!exercise.getWorkout().getPlayer().getUser().getEmail().equals(email)) {
+                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+                }
+                return exercise;
         }
 
 }

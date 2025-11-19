@@ -3,14 +3,12 @@ package org.gamify.gym.app.training.dto;
 import java.sql.Date;
 import java.sql.Time;
 
-public class CreateExerciseLogDto {
+public class AlterExerciseLogDto {
     private Double weight;
     private int reps;
+    private String exerciseName;
     private Time timeIn;
     private Date dayMade;
-    private Long playerId;
-    private Long exerciseId;
-    private String exerciseName;
 
     public Double getWeight() {
         return weight;
@@ -42,22 +40,6 @@ public class CreateExerciseLogDto {
 
     public void setDayMade(Date dayMade) {
         this.dayMade = dayMade;
-    }
-
-    public Long getPlayerId() {
-        return playerId;
-    }
-
-    public void setPlayerId(Long playerId) {
-        this.playerId = playerId;
-    }
-
-    public Long getExerciseId() {
-        return exerciseId;
-    }
-
-    public void setExerciseId(Long exerciseId) {
-        this.exerciseId = exerciseId;
     }
 
     public String getExerciseName() {

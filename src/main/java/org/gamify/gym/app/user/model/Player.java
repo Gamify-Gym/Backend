@@ -2,6 +2,7 @@ package org.gamify.gym.app.user.model;
 
 import java.util.List;
 
+import org.gamify.gym.app.dieta.model.Dieta;
 import org.gamify.gym.app.streak.model.PlayerActivity;
 import org.gamify.gym.app.training.model.Workout;
 
@@ -24,13 +25,25 @@ import jakarta.persistence.Table;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_player;
+    private Long id_player;
 
     @Column
     private Double height;
 
     @Column
     private Double weight;
+
+    @Column
+    private Integer weeklyTargetDays = 2;
+
+    @Column
+    private Integer weeklyStreak = 0;
+
+    @Column
+    private Integer lastWeekOfYear = 0;
+
+    @Column
+    private Integer currentWeekTrainedDays = 0;
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -60,6 +73,10 @@ public class Player {
     @JoinColumn(name = "personal_trainer_id")
     private PersonalTrainer personalTrainer;
 
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Dieta> dietas;
+
     public Double getHeight() {
         return height;
     }
@@ -84,6 +101,14 @@ public class Player {
         this.personalTrainer = personalTrainer;
     }
 
+    public List<Dieta> getDietas() {
+        return dietas;
+    }
+
+    public void setDietas(List<Dieta> dietas) {
+        this.dietas = dietas;
+    }
+
     public Nutritionist getNutritionist() {
         return nutritionist;
     }
@@ -99,4 +124,49 @@ public class Player {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<PlayerActivity> activities;
+
+    public Integer getWeeklyTargetDays() {
+        return weeklyTargetDays;
+    }
+
+    public void setWeeklyTargetDays(Integer weeklyTargetDays) {
+        this.weeklyTargetDays = weeklyTargetDays;
+    }
+
+    public Integer getWeeklyStreak() {
+        return weeklyStreak;
+    }
+
+    public void setWeeklyStreak(Integer weeklyStreak) {
+        this.weeklyStreak = weeklyStreak;
+    }
+
+    public Integer getLastWeekOfYear() {
+        return lastWeekOfYear;
+    }
+
+    public void setLastWeekOfYear(Integer lastWeekOfYear) {
+        this.lastWeekOfYear = lastWeekOfYear;
+    }
+
+    public Integer getCurrentWeekTrainedDays() {
+        return currentWeekTrainedDays;
+    }
+
+    public void setCurrentWeekTrainedDays(Integer currentWeekTrainedDays) {
+        this.currentWeekTrainedDays = currentWeekTrainedDays;
+    }
+
+    public List<PlayerActivity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<PlayerActivity> activities) {
+        this.activities = activities;
+    }
+
+    public Long getId_player() {
+        return id_player;
+    }
+
 }

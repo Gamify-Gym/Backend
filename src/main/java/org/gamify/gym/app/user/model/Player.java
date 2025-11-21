@@ -1,8 +1,11 @@
 package org.gamify.gym.app.user.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.gamify.gym.app.dieta.model.Dieta;
+import org.gamify.gym.app.friendship.model.PlayerGroup;
 import org.gamify.gym.app.streak.model.PlayerActivity;
 import org.gamify.gym.app.training.model.Workout;
 
@@ -48,6 +51,9 @@ public class Player {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Workout> workouts;
+
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+    private Set<PlayerGroup> groups = new HashSet<>();
 
     public List<Workout> getWorkouts() {
         return workouts;
@@ -169,4 +175,17 @@ public class Player {
         return id_player;
     }
 
+    public void setId_player(Long id_player) {
+        this.id_player = id_player;
+    }
+
+    public Set<PlayerGroup> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<PlayerGroup> groups) {
+        this.groups = groups;
+    }
+
+    
 }
